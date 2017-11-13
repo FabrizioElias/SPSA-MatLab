@@ -25,7 +25,6 @@ tic
 clc
 clear variables global
 
-
 % O controle de geradores de números randômicos deve ser retirado após a
 % validação do código
 rng('default')
@@ -38,7 +37,8 @@ fprintf('\nORIENTADOR Ézio da Rocha Araujo\n');
 fprintf('------------------------------------------------------------------\n');
 disp(' ')
 
-global m
+%FAB - Remoção de variável global sem uso.
+%global m
 
 % 1 - ENTRADA DE DADOS
 disp('1. LEITURA DOS ARQUIVOS DE ENTRADA')
