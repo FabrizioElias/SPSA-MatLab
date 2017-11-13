@@ -1,0 +1,1 @@
+"D:\UFPE\Doutorado\FEAP\FEAP83(x32)\feap83\feap83\Release\feap83.exe" %1

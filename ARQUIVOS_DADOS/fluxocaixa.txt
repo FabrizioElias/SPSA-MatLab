@@ -1,0 +1,9 @@
+% Fluxo de caixa: a primeira coluna representa as depesas e a segunda as receitas
+% 'tipo distribuição'
+1
+0   0
+0   200
+0   200
+0   200
+0   200
+0   200

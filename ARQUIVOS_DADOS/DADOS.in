@@ -1,0 +1,175 @@
+% -------------------------------------------------------------------------
+% Universidade Federal de Pernambuco
+% Programa de Pos-Graduaçao Engenharia Civil / Estruturas
+%
+% TESE DE DOUTORADO
+% MODELOS  DE SELEÇAO DE  MÉDIA FIDELIDADE  PARA  ANALISE DE  INCERTEZAS EM
+% ESTRUTURAS DE CONCRETO ARMADO.
+% ALUNA       Nilma Andrade
+% ORIENTADOR  Prof. Ezio da Rocha Araujo
+%
+% ADAPTACAO DA ROTINA DE DIEGO OLIVEIRA 30-Janeiro-2006
+% -------------------------------------------------------------------------
+% DADOS E CONTROLADORES
+%--------------------------------------------------------------------------
+% Número de Parâmetros
+6
+%--------------------------------------------------------------------------
+% ARQUIVOS
+P1OTtpl.tpl          %1 Arquivo Template                            (filetpl)
+VIGA_TEMPLATE_MC.tpl %2 Arquivo Template da opcao Monte Carlo       (filetplmc)
+simfeap.txt          %3 Arquivo Simulação                           (filesim)
+simulacao1.dat       %4 Arquivo Include
+simulacao2.dat       %5 Arquivo Include
+PorticoPlano.res     %6 Arquivo de Output                                           (fileout)
+PortINPUTport1TESTE.txt   %7 Arquivo de input do pórtico plano                          (filein)
+arranjovigalong.txt  %17 Arquivo com as bitolas comerciais das armaduas de flexão    (filetabflex)   
+arranjovigatrans.txt %18 Arquivo com as bitolas comerciais das armaduras de cortante (filetabtrans)
+arranjopilarlong.txt %19 Arquivo com as bitolas comerciais das armaduas de flexão    (filetablong)
+parconc.txt          %20 Arquivo com os parâmetros referentes às propriedades do concreto(fileparconc)
+parconcTD.txt        %21 Arquivo com os coeficientes para cácluclo dos paraâmetros dependentes do tempo(fileparconcTD)
+paraco.txt           %22 Arquivo com os parâmetros referentes às propriedades do aço (fileparaco)
+parsteel.txt         %22 Arquivo com os parâmetros referentes às propriedades do aço (fileparesteel)
+pareco.txt           %23 Arquivo com os parâmetros econômicos                        (filepareco)
+fluxocaixa.txt       %24 Arquivo contendo o fluxo de caixa do empreendimento         (filefluxocaixa)
+%
+%--------------------------------------------------------------------------
+% VARIÁVEIS DAS OPCOES DE SIMULACAO
+% op_simulador          % Opcao de escolha do simulador
+1                       % 0 - Utiliza o FEAP
+                        % 1 - Utiliza rotina PorticoPlano do MATLAB
+%--------------------------------------------------------------------------
+% op_montafile          % Opcao de montar arquivo de simulacao (se for utilizar o FEAP)
+0                       % (0-Nao ; 1-Sim)
+%--------------------------------------------------------------------------
+% op_exec               % Opcao de Execucao do codigo
+2                       % 0 - Processamento do pórtico plano
+                        % 1 - Simulacao Simples
+                        % 2 - Otimizacao
+                        % 3 - Analise de Sensibilidade  
+%--------------------------------------------------------------------------
+% op_spring             % Opcao de utilizar barras sobre base elástica
+0                       % 0 - Não
+                        % 1 - Sim   
+%--------------------------------------------------------------------------
+% op_time               % Opcao de análise Time Dependent
+0                       % 0 - Não
+                        % 1 - Sim 
+%--------------------------------------------------------------------------
+% op_temp               % Opcao de análise considerando variação térmica
+0                       % 0 - Não
+                        % 1 - Sim 
+%--------------------------------------------------------------------------
+% op_concdesing         % Opcao de dimensionamento elementos de concreto
+1                       % 0 - Não
+                        % 1 - Sim 
+%--------------------------------------------------------------------------
+% op_phisicalpar        % Opcao para cálculo dos parâmetros fisicos a partir do fck
+0                       % 0 - FIB - MC2010
+                        % 1 - NBR 6118-2014
+                        % 2 - FIB - MC90 
+                        % 3 - Ler à partir do cartão de entrada
+%--------------------------------------------------------------------------
+% op_tempeffctes        % Opção para consideração do efeito da temperatura no coef. de retração e fluência do concreto
+0                       % 0 - não
+                        % 1 - sim
+%--------------------------------------------------------------------------
+% op_gain               % Opcao de utilização dos valores de A, a, c, alpha e gamma
+0                       % 0 - Utiliza dos valores constantes no cartão de entrada
+                        % 1 - Utiliza os valores calculados na função gains_model1D
+%--------------------------------------------------------------------------
+% op_suav               % Opcaoo de utilizar suavização do gradiente aproximado
+0                       % 0 - Nao utiliza suavização do gradiente aproximado
+                        % 1 - Utiliza suavização do gradiente aproximado
+%--------------------------------------------------------------------------                            
+% op_minimax            % Opcao do tipo de funcao objetivo:
+0                       % 0 - Minimizacao do custo da estrutura
+                        % 1 - Maximizacao do VPL         
+%--------------------------------------------------------------------------
+
+% PARÂMETROS DE OTIMIZACAO - TOLERÂNCIAS
+%tolfun                 %Tolerância da função objetivo
+0.05
+%tolx                   %Tolerância dos parâmetros
+10
+%tolfunh                %Tolerância da função objetivo na fase ASP (SPSA-H)
+0.2
+%tolxh                  %Tolerância em x na fase ASP (SPSA-H)
+10
+% N                     % Número máximo de iterações do SPSA, 
+10000
+% c                     % Parâmetro SPSA - gain
+2
+% a                     % Parâmetro SPSA - gain
+0.004
+% A                     % Parâmetro SPSA - gain
+1
+% alpha                 % Parâmetro SPSA - gain
+0.602
+% gamma                 % Parâmetro SPSA - gain
+0.101
+% gmedio                % Parâmetro SPSA - número de avaliações da função objetivo no gain ou suavização
+5
+% stepi                 % Parâmetro SPSA - tamanho inicial do passo, vai alterar na variável a ser otimizada, dimensão dos elementos. Valor em metros
+0.05                 
+%--------------------------------------------------------------------------
+% PARÂMETROS DE MONTE CARLO E RESTRICOES
+%NMC                  %Número de Realizacoes Monte Carlo
+10
+%covb                 %Coefeficiente de Variação Especificado (op_restr =2,4)
+0.10
+%stdb                 %Desvio Padrão Especificado (op_restr = 3,5)
+3.69E+04
+%delcov               %Delta do Coeficiente de Variação
+0.015
+%--------------------------------------------------------------------------
+% VARIÁVEIS DO MODELO VIGA
+%cobv            % Cobrimento das armaduras(m)
+0.025
+%diamagreg       % Diâmentro do agregado graúdo
+0.025
+%flexinicial     % Estimativa inicial do diâmetro da armadura de flexão
+0.0125
+%transinicial    % Estimativa inicial do diâmetro da armadura transversal
+0.0063
+% bvmin           % Largura mínima da viga em cm
+.2
+% hvmin           % Altura mínima da viga em cm
+.6
+% bvmax           % Largura máxima da viga em cm
+.40
+% hvmax           % Altura máxima da viga em cm
+1.20
+% Ltrecho         % Comprimento do trecho que será considerado o EC constante
+2.5
+
+%--------------------------------------------------------------------------
+% VARIÁVEIS DO MODELO PILAR
+%cobp         %Cobrimento das armaduras(m)
+.025
+% bpmin           % Largura mínima do elemento estrutural em cm
+.15
+% hpmin           % Altura mínima do elemento estrutural em cm
+.15
+% bpmax           % Largura máxima do elemento estrutural em cm
+1.00
+% hpmax           % Altura máxima do elemento estrutural em cm
+1.00
+%--------------------------------------------------------------------------
+% OUTROS DADOS 
+%romin              %Taxa geometrica mínima de armadura longitudinal de vigas
+%                   %NBR6118-Tabela 17.3
+0.15
+%teta               %Angulo de inclinação das fissuras (graus).
+45
+%alfa               %Ângulo de inclinação dos estribos (graus).
+90
+%neta1,neta2,neta3  %Coef. para cálculo da tensão de aderência da
+%                   %armadura passiva.NBR6118-9.1
+2.25
+1
+1
+% Taxa de retorno do empreendimento (%, a.m.)
+10
+
+               
