@@ -1,7 +1,5 @@
-%FAB - Otimização da assiantura do método.
-%function [lbnecVante, lbnecRe, Abarra]=beam9(VIGAin, AsCalculadoInf ,ARRANJOLONGinf, bitola, lbnecRe,...
-%   lbnecVante, Abarra)
-function [lbnecVante, lbnecRe, Abarra]=beam9(VIGAin, AsCalculadoInf ,ARRANJOLONGinf)
+function [lbnecVante, lbnecRe, Abarra]=beam9(VIGAin, AsCalculadoInf ,ARRANJOLONGinf, bitola, lbnecRe,...
+    lbnecVante, Abarra)
 % -------------------------------------------------------------------------
 % UNIVERSIDADE FEDERAL DE PERNAMBUCO   - CENTRO DE TECNOLOGIA E GEOCIÊNCIAS
 % PROGRAMA DE PÓS-GRADUAÇÃO EM ENGENHARIA CIVIL        - ÁREA DE ESTRUTURAS

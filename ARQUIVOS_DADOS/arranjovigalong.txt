@@ -1,0 +1,3 @@
+% Arranjo de armadura de flexão:
+% Primeira linha - diâmetro das barras de flexão
+10.0 12.5 16.0

@@ -1,5 +1,4 @@
-%FAB - Remoção de variável sem uso (CORTANTE).
-function [PILARresult]=columnMC(PILARresult, PORTICO, ELEMENTOS, DADOS, ~, MOMENTO, NORMAL, PILAR, PAR, qntbitolas, ESTRUTURAL)
+function [PILARresult]=columnMC(PILARresult, PORTICO, ELEMENTOS, DADOS, CORTANTE, MOMENTO, NORMAL, PILAR, PAR, qntbitolas, ESTRUTURAL)
 % -------------------------------------------------------------------------
 % UNIVERSIDADE FEDERAL DE PERNAMBUCO   - CENTRO DE TECNOLOGIA E GEOCIÊNCIAS
 % PROGRAMA DE PÓS-GRADUAÇÃO EM ENGENHARIA CIVIL        - ÁREA DE ESTRUTURAS
@@ -24,19 +23,27 @@ function [PILARresult]=columnMC(PILARresult, PORTICO, ELEMENTOS, DADOS, ~, MOMEN
 % -------------------------------------------------------------------------
 global m;
 
-% Cálculo da qnt de pilares no pórtico e do comprimento de cada um
-PILAR.elemento=ESTRUTURAL.ELEMPILAR';
+% % Cálculo da qnt de pilares no pórtico e do comprimento de cada um
+% PILAR.elemento=ESTRUTURAL.ELEMPILAR';
+% GAMBIARRA - OS ELEMENTOS ESTRUTURAIS QUE SÃO PILARES SERÃO EXPRESSOS DE
+% FORMA EXPLÍCITA, NÃO TENHO TEMPO DISPONÍVEL PARA AJUSTAR A ROTINA. ISSO
+% DEVE SER AUTOMATIZADO POSTERIORMENTE. RESSALTA-SE TAMBÉM QUE A NUMERAÇÃO
+% CONTIDA NO VETOR PILAR.elemento DIZ RESPEITO A POSICÃO DO ELEMENTO
+% ESTRUTURAL NO VETOR ESTRUTURAL.D E NÃO A NUMERAÇÃO DO PILAR. ISSO ESTÁ
+% RUIM (repito fui eu quem fiz a besteira) POIS O VETOR ESTRUTURAL.D ESTÁ
+% MAL FEITO, TEM QUE SER REFORMULADO.
+PILAR.elemento=[2 7 8 9];
 s=size(PILAR.elemento);
-s=s(1);
+s=s(2);
 DADOS.Npilares=s;
 PILARin.COMPRIMENTO=zeros(1,DADOS.Npilares);
 PILARin.compelem=zeros(1,DADOS.Npilares);
 for NumPilar=1:DADOS.Npilares
     % Nós inicail e final
-    noi=PORTICO.conec(ESTRUTURAL.D(PILAR.elemento(NumPilar,1),1),1);
-    nof=PORTICO.conec(ESTRUTURAL.D(PILAR.elemento(NumPilar,1),2),2);
+    noi=PORTICO.conec(ESTRUTURAL.D(PILAR.elemento(NumPilar),1),1);
+    nof=PORTICO.conec(ESTRUTURAL.D(PILAR.elemento(NumPilar),2),2);
     PILARin.COMPRIMENTO(NumPilar)=PORTICO.z(nof)-PORTICO.z(noi);
-    nelem=ESTRUTURAL.D(PILAR.elemento(NumPilar,1),2)-ESTRUTURAL.D(PILAR.elemento(NumPilar,1),1)+1;
+    nelem=ESTRUTURAL.D(PILAR.elemento(NumPilar),2)-ESTRUTURAL.D(PILAR.elemento(NumPilar),1)+1;
     PILARin.compelem(NumPilar)=PILARin.COMPRIMENTO(NumPilar)/nelem;
 end
 
@@ -48,7 +55,7 @@ PILARin.roaco=PAR.ACO.rosV(m);    % Peso específico do aço
 PILARin.fyd=PAR.ACO.fyV(m);
 PILARin.Ec=PAR.CONC.EcsV(m);    % <-- Módulo de elasticidade secante do concreto
 PILARin.fcd=PAR.CONC.fccV(m);   % Dados em kN/m2;
-PILARin.phi=PAR.CONC.phi(m);
+% PILARin.phi=PAR.CONC.phi(m);
 PILARin.sigmacd=0.85*PILARin.fcd;
 PILARin.epsonyd=1000*PILARin.fyd/PILARin.Es; % <-- Multiplicação por 1000 para que a unidade fique em termos de "por mil"
 PILARin.diamagregado=DADOS.diamagreg;
@@ -76,7 +83,7 @@ for NumPilar=1:DADOS.Npilares
     pilar=ESTRUTURAL.D(PILAR.elemento(NumPilar),1);                      
     PILARin.b=ELEMENTOS.secaoV(pilar,1,m);
     PILARin.h=ELEMENTOS.secaoV(pilar,2,m);
-    pilar=PILAR.elemento(NumPilar,1);
+    pilar=PILAR.elemento(NumPilar);
     
     PILARin.yT=PILARin.h/2;                         % ordenada do topo da seção transversal
     PILARin.yB=-PILARin.h/2;                        % ordenada da base da seção transversal
@@ -92,7 +99,9 @@ for NumPilar=1:DADOS.Npilares
     
     % OBTENÇÃO DOS ESFORÇOS SOLICITANTES - column0.m
     % Cálculo das excentricidades
-    [PILARout]=column0MC(MOMENTO, NORMAL, PILARin, pilar, NumPilar);
+    M=MOMENTO.dim(NumPilar);
+    N=NORMAL.dim(NumPilar);
+    [PILARout]=column0MC(M, N, PILARin, pilar, NumPilar);
     % Esforço normal - PILARout.Nmax
     % Momento fletor
     PILARout.Md=PILARout.Nmax*PILARout.et;
@@ -172,10 +181,10 @@ for NumPilar=1:DADOS.Npilares
                     break        % <-- Finaliza o segundo loop do nby
                 end
             end
-            % INDICADORES AÇO
-            % Cálculo da área de aço, peso da armadura longitudinal, distribuição de
-            % barras na seção e diâmetro da barra de aço empregada
             if tagELU==1
+                % INDICADORES AÇO
+                % Cálculo da área de aço, peso da armadura longitudinal, distribuição de
+                % barras na seção e diâmetro da barra de aço empregada
                 s=size(PILARin.distbarras);
                 PILARresult.ARRANJO(NumPilar,1:s(2))=PILARin.distbarras;
                 PILARresult.bitola(NumPilar)=PILAR.TABELALONG(ii)/1000;
@@ -187,11 +196,11 @@ for NumPilar=1:DADOS.Npilares
                 PILARresult.Aforma(m,NumPilar)=(2*PILARin.b+2*PILARin.h)*PILARin.COMPRIMENTO(NumPilar);
             end
         end
-    end  
+    end
     if tagELU==0
         PILARresult.PesoArmLong(m,NumPilar)=9999999;
+        disp(['        Pilar ',num2str(NumPilar),' não passou'])
         PILARresult.Volconc(m,NumPilar)=PILARin.b*PILARin.h*PILARin.COMPRIMENTO(NumPilar);
         PILARresult.Aforma(m,NumPilar)=(2*PILARin.b+2*PILARin.h)*PILARin.COMPRIMENTO(NumPilar);
-    end
-        
+    end   
 end                    

@@ -1,4 +1,4 @@
-function [VIGAresult]=beamNegMC(VIGAin, VIGA, NUMVIGAS, VIGAresult)
+function [VIGAresult]=beamNeg(VIGAin, VIGA, NUMVIGAS, VIGAresult)
 % -------------------------------------------------------------------------
 % UNIVERSIDADE FEDERAL DE PERNAMBUCO   - CENTRO DE TECNOLOGIA E GEOCIÊNCIAS
 % PROGRAMA DE PÓS-GRADUAÇÃO EM ENGENHARIA CIVIL        - ÁREA DE ESTRUTURAS
@@ -60,8 +60,7 @@ for trecho=1:VIGAin.qnttrechosneg % PERCORRE TRECHOS COM MF<0
             %disp(['    Bitola ',num2str(VIGA.TABELALONG(bitola))])
             tag=0;
             if tag==0
-                %FAB - Remoção de variáel sem uso.
-                %diambarra=VIGA.TABELALONG(bitola)/1000;
+                diambarra=VIGA.TABELALONG(bitola)/1000;
                 posbitolatrac=bitola;
                 posbitolacomp=bitola;
                 tag=0; % Tag para definir se a seção será dimensionada
@@ -77,8 +76,7 @@ for trecho=1:VIGAin.qnttrechosneg % PERCORRE TRECHOS COM MF<0
                             % Portanto após a primeira iteração será calculada altura útil
                             % real, essa será utilizada para uma nova iteração até que a
                             % igualdade ocorra.
-                            count=0;
-                            while d1~=d2 && count<10
+                            while d1~=d2
                                 % Dimensionamento da seção à flexão - beam0.m
                                 [Astrac, Ascomp]=beam0(momento, VIGAin, sec, bitola);
                                 % Escolha do arranjo da armadura - beam1.m
@@ -90,7 +88,6 @@ for trecho=1:VIGAin.qnttrechosneg % PERCORRE TRECHOS COM MF<0
                                 d1=VIGAin.dinf(bitola,sec);
                                 d2=VIGAin.h-YcgTrac;
                                 VIGAin.dinf(bitola, sec)=d2;
-                                count=count+1;
                             end
                             % Verificação de a difrença entre o CG da barras e a
                             % extremidade da barra mais externa é infeior a 10% da
@@ -128,11 +125,7 @@ for trecho=1:VIGAin.qnttrechosneg % PERCORRE TRECHOS COM MF<0
     % Cálculo do comprimento e peso final das barras do arranjo negativo e armadura de montagem -
     % beam6.m
     %disp('    Cálculo do peso de aço referente às armaduras negatvas')
-    if tag==0
-        [VIGAresult, COMPneg]=beam6(VIGAin, ARRANJOLONGsup, trecho, lbnecVante, lbnecRe, al, NUMVIGAS, VIGAresult, COMPneg);
-    else
-        VIGAresult.PESOneg(NUMVIGAS, trecho, m)=99999;
-    end
+    [VIGAresult, COMPneg]=beam6(VIGAin, ARRANJOLONGsup, trecho, lbnecVante, lbnecRe, al, NUMVIGAS, VIGAresult, COMPneg);
 
 end
 

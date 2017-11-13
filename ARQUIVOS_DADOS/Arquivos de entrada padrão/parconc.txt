@@ -1,0 +1,13 @@
+% Parâmetros referentes à resistência à compressão do concreto: fcc, delatafcc, alfaE (FIB), Ec0(FIB) roc, Eci, Ecs, poisson, phi, epsonscs alfaTemp
+% 'tipo distribuição'   'Média'         'Desv.Pad'
+1                       30000           6460
+1                       8000            0
+1                       1               0
+1                       21500000        0
+1                       25              0.75
+1                       26838405        0
+1                       26838405        0
+1                       0.2             0
+1                       0               0
+1                       -0.00002134     0
+1                       9.90E-6         0                

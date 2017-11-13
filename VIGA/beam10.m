@@ -46,9 +46,7 @@ Asvao=max(AsCalculadoInf);
 Asapoio=Asvao/3;
 nbarras=ceil(Asapoio./Abarra);
 
-%FAB - Prealocação não é recomendada aqui pois abaixo, Q é retorno de uma
-%função.
-%Q=zeros(VIGAin.numsecoestrechopos,1);
+Q=zeros(VIGAin.numsecoestrechopos,1);
 
 % Nesse loop será verificado a qnt mínima de barras no apoio. A variável
 % nbarras é a qnt mínima de barras no apoio.
@@ -85,10 +83,7 @@ vol=zeros(1,VIGAin.numsecoestrechopos);
 % A multiplicação por cem serve para transormar a unidade de kN (unidade
 % utilizada no arquivos de input) para kgf, unidade mais fácil de assimilar
 % como output.
-%FAB - Remoção da transposição da matriz e colocação da instrução para
-%somar as linhas de vol.
-%PESO=sum(vol').*VIGAin.roaco*100;
-PESO=sum(vol, 2).*VIGAin.roaco*100;
+PESO=sum(vol').*VIGAin.roaco*100;
 
 VIGAresult.PESOpos(NUMVIGAS)=PESO;
 

@@ -1,0 +1,14 @@
+% Coeficientes utilizados para o cálculo dos parâmetros do concreto depende
+ntes do tempo: t0(dias), alfa, deltati(dias), Tdeltati(celsius), RH (umidade do ar, %), ts(dias), alfas, alfas1, alfas2, betasc t(dias)
+% 'Coeficiente' 
+28
+0
+30
+25  
+80    
+2
+700
+4
+.012 
+5
+100   

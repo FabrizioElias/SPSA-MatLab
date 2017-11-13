@@ -1,0 +1,5 @@
+% Parâmetros referentes à resistência à compressão do concreto: fys, ros, Es
+% 'tipo distribuição'   'parâmetro 1'   'parâmetro 2'
+1                       500000          0
+1                       76.495        	0
+1                       210000000       0              

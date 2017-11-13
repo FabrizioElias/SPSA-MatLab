@@ -25,8 +25,6 @@ s=size(M);
 numsec=s(2);
 
 j=1;
-%FAB - Prealocação de matriz.
-A = zeros(numsec,1);
 for i=1:numsec
     if M(i)~=0
         A(j)=M(i);

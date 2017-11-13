@@ -1,5 +1,4 @@
-%FAB - Troca do nome da função para o nome do arquivo.
-function [PILARout]=column0MC(MOMENTO, NORMAL, PILARin, pilar, NumPilar)
+function [PILARout]=column0MC(M, N, PILARin, pilar, NumPilar)
 % -------------------------------------------------------------------------
 % UNIVERSIDADE FEDERAL DE PERNAMBUCO   - CENTRO DE TECNOLOGIA E GEOCIÊNCIAS
 % PROGRAMA DE PÓS-GRADUAÇÃO EM ENGENHARIA CIVIL        - ÁREA DE ESTRUTURAS
@@ -22,25 +21,25 @@ function [PILARout]=column0MC(MOMENTO, NORMAL, PILARin, pilar, NumPilar)
 % CRIADA EM 21-fevereiro-2016
 % -------------------------------------------------------------------------
 
-%FAB - Remoção de variável global sem uso.
-%global m
+global m
 
 % Esforços solicitantes no elemento estrutural
 % Esforço Normal
-N=NORMAL.TOTAL{pilar,:};          % <-- Esforço normal total: PP+SC
-N=N(N~=0);                        % <-- Remove os zeros do vetor N  
-PILARout.Nmax=max(abs(N));
+PILARout.Nmax=abs(N);
+% N=NORMAL.TOTAL{pilar,:};          % <-- Esforço normal total: PP+SC
+% N=N(N~=0);                        % <-- Remove os zeros do vetor N  
+% PILARout.Nmax=max(abs(N));
 ni=PILARout.Nmax/(PILARin.A*PILARin.fcd);    % <-- Valor admensinal do esforço normal
-%FAB - Remoção de variável sem uso (Raio de giração).
-%r=(ni+0.5)*PILARin.h/.005;        % <--1/r=0.005/((ni+0.5)*h), raio de giração
-Npp=NORMAL.PP{pilar,:};           % <-- Esforço normal devido ao PP - cálculo da excentricidade suplementar
-Npp=Npp(Npp~=0);                  % <-- Remove os zeros do vetor Npp
+r=(ni+0.5)*PILARin.h/.005;        % <--1/r=0.005/((ni+0.5)*h), raio de giração
+% Npp=NORMAL.PP{pilar,:};           % <-- Esforço normal devido ao PP - cálculo da excentricidade suplementar
+% Npp=Npp(Npp~=0);                  % <-- Remove os zeros do vetor Npp
 % Momento Fletor
-M=MOMENTO.TOTAL{pilar,:};         % <-- Momento fletor total: PP+SC
-M=M(M~=0);                        % <-- Remove os zeros do vetor M
-Mmax=max(abs(M));
-Mpp=MOMENTO.PP{pilar,:};     % <-- Momento fletor devido ao PP - cálculo da excentricidade suplementar
-Mpp=Mpp(Mpp~=0);                  % <-- Remove os zeros do vetor Mpp
+Mmax=M;
+% M=MOMENTO.TOTAL{pilar,:};         % <-- Momento fletor total: PP+SC
+% M=M(M~=0);                        % <-- Remove os zeros do vetor M
+% Mmax=max(abs(M));
+% Mpp=MOMENTO.PP{pilar,:};     % <-- Momento fletor devido ao PP - cálculo da excentricidade suplementar
+% Mpp=Mpp(Mpp~=0);                  % <-- Remove os zeros do vetor Mpp
 
 % CÁLCULO DAS EXCÊNTRICIDADES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,27 +70,28 @@ PILARout.ea=teta1*PILARin.COMPRIMENTO(NumPilar)/2;
 e1=PILARout.ei+PILARout.ef;
 
 % Cálculo do momento fletor mínimo
-M1dmin=max(abs(N))*(0.015+0.03*PILARin.h);
+M1dmin=max(PILARout.Nmax*(0.015+0.03*PILARin.h));
 
-% Cálculo do parâmetro alfab - pilar bi-apoiado
-s=size(M);
-s=s(2);
-MA=max((abs(M(s))),abs(M(1)));  % Maior MF dentre as extremidades do pilar
-MB=min((abs(M(s))),abs(M(1)));  % Menor MF dentre as extremidades do pilar
-if M(s)/M(1)<0
-    MB=-MB;                     % Se MA e MB tracionares fibras opostas devem possuir sinais contrários
-end
-% Valor de alfab - devem ser verificadas as seguintes condições: alfab<0.4,
-% alfab>1 e alfab deve ser igual a 1 se o momento ao longo do pilar for
-% menor que o momento mínimo definido em 11.3.3.4.3 da NBR 6118/2014
-alfab=0.6+0.4*MB/MA;
-if alfab<0.4
-    alfab=0.4;
-elseif alfab>1
-    alfab=1;
-elseif M1dmin>max(abs(M))
-    alfab=1;
-end
+% % Cálculo do parâmetro alfab - pilar bi-apoiado
+% s=size(M);
+% s=s(2);
+% MA=max((abs(M(s))),abs(M(1)));  % Maior MF dentre as extremidades do pilar
+% MB=min((abs(M(s))),abs(M(1)));  % Menor MF dentre as extremidades do pilar
+% if M(s)/M(1)<0
+%     MB=-MB;                     % Se MA e MB tracionares fibras opostas devem possuir sinais contrários
+% end
+% % Valor de alfab - devem ser verificadas as seguintes condições: alfab<0.4,
+% % alfab>1 e alfab deve ser igual a 1 se o momento ao longo do pilar for
+% % menor que o momento mínimo definido em 11.3.3.4.3 da NBR 6118/2014
+% alfab=0.6+0.4*MB/MA;
+% if alfab<0.4
+%     alfab=0.4;
+% elseif alfab>1
+%     alfab=1;
+% elseif M1dmin>max(abs(M))
+%     alfab=1;
+% end
+alfab=1;
 % Valor limite para o índice de esbeltez do pilar
 lambda1=(25+12.5*e1/PILARin.h)/alfab;
 if lambda1<35
@@ -112,11 +112,11 @@ elseif PILARin.lambda>lambda1 && PILARin.lambda<90
 % Pilares esbeltos
 elseif PILARin.lambda>90 && PILARin.lambda<140
     disp(['    Pilar esbelto: lambda=  ',num2str(PILARin.lambda)])
-    disp('    IMPLEMENTAR PROCESSO MAIS EXATO')
-    PILARout.e2=99;  % Com e2 muito alto o pilar não passará, será lançado um valor muito para o peso da armadura a fim de gerar um custo muito alto, penalizando o algoritmo de otimização
+    disp(['    IMPLEMENTAR PROCESSO MAIS EXATO'])
+    PILARout.e2=99;
 elseif PILARin.lambda>140 && PILARin.lambda<200
     disp(['    Pilar muito esbelto: lambda=  ',num2str(PILARin.lambda)])
-    disp('    IMPLEMENTAR PROCESSO GERAL')
+    disp(['    IMPLEMENTAR PROCESSO GERAL'])
     PILARout.e2=99;
 else
     disp('     ESBLETEZ MUITO ALTA (LAMBDA>200) - IMPOSSÍVEL DIMENSIONAR')
@@ -126,11 +126,13 @@ end
 %---------------------- EXCENTRICIDADES SUPLEMENTAR ----------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if PILARin.lambda>90
-    % Esforços solicitantes devido às ações permanentes
-    Msg=max(abs(Mpp));
-    Nsg=max(abs(Npp));
-    Ne=10*PILARin.Ec*PILARin.I/PILARin.Lef^2;
-    PILARout.ec=(Msg/Nsg+PILARout.ea)*(2.718^(PILARin.phi*Nsg/(Ne-Nsg))-1); 
+%     % Esforços solicitantes devido às ações permanentes
+%     Msg=max(abs(Mpp));
+%     Nsg=max(abs(Npp));
+%     Ne=10*PILARin.Ec*PILARin.I/PILARin.Lef^2;
+%     PILARout.ec=(Msg/Nsg+PILARout.ea)*(2.718^(PILARin.phi*Nsg/(Ne-Nsg))-1); 
+disp('     ESBLETEZ MAIOR QUE 90 - NECESSIDADE DE CONSIDERAR OS EFITOS DA FLUÊNCIA')
+PILARout.ec=99;
 else
     PILARout.ec=0;
 end

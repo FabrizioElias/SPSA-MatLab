@@ -1,5 +1,4 @@
-%FAB - Otimização da assinatura do método, remoção de lbnecVante.
-function [VIGAresult, COMPneg]=beam6(VIGAin, ARRANJOLONGsup, trecho, ~, lbnecRe, al, NUMVIGAS, VIGAresult, COMPneg)
+function [VIGAresult, COMPneg]=beam6(VIGAin, ARRANJOLONGsup, trecho, lbnecVante, lbnecRe, al, NUMVIGAS, VIGAresult, COMPneg)
 % -------------------------------------------------------------------------
 % UNIVERSIDADE FEDERAL DE PERNAMBUCO   - CENTRO DE TECNOLOGIA E GEOCIÊNCIAS
 % PROGRAMA DE PÓS-GRADUAÇÃO EM ENGENHARIA CIVIL        - ÁREA DE ESTRUTURAS
@@ -61,11 +60,7 @@ end
 if VIGAin.numsecoestrechoneg(trecho)==1
     PESO=vol'.*VIGAin.roaco*100;
 else
-    %FAB - Remoção da transposição e colocação de instrução para somar cada
-    %linha de vol. sum(vol') iria somar as colunas que antes da
-    %transposição são as linhas.
-    %PESO=sum(vol').*VIGAin.roaco*100;
-    PESO=sum(vol, 2).*VIGAin.roaco*100;
+    PESO=sum(vol').*VIGAin.roaco*100;
 end
 
 % Peso de aço da armadura negativa

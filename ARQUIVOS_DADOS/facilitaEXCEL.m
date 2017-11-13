@@ -1,0 +1,5 @@
+AA=zeros(1,33);
+AA(1,25:33)=TRANSX.TREMTIPO{2,1};
+AA(1,1:25)=TRANSX.TREMTIPO{1,1};
+AA=fliplr(AA);
+AA'

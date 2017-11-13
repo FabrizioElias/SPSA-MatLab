@@ -198,12 +198,12 @@ for NUMVIGAS=1:DADOS.Nvigas
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-----------CÁLCULO DAS QUANTIDADES DE MATERIAL A SER UTILIZADO-----------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-     % Cálculo do volume de concreto
-    VIGAresult.volconc(NUMVIGAS)=VIGAin.b*VIGAin.h*VIGAin.COMPRIMENTO(NUMVIGAS);
+    % Cálculo do volume de concreto
+    VIGAresult.volconc(NUMVIGAS)=VIGAin.b*VIGAin.h*PORTICO.comp(VIGA.elemento(NUMVIGAS));
     VIGAresult.volconcTOTAL=VIGAresult.volconcTOTAL+VIGAresult.volconc(NUMVIGAS);
     
     % Cálculo da área de forma
-    VIGAresult.aforma(NUMVIGAS)=(VIGAin.b+2*VIGAin.h)*VIGAin.COMPRIMENTO(NUMVIGAS);
+    VIGAresult.aforma(NUMVIGAS)=(VIGAin.b+2*VIGAin.h)*PORTICO.comp(VIGA.elemento(NUMVIGAS));
     VIGAresult.aformaTOTAL=VIGAresult.aformaTOTAL+VIGAresult.aforma(NUMVIGAS);
     
 end

@@ -1,0 +1,5 @@
+% Parâmetros referentes ao aço do estaqueamento: fys, ros, Eys
+% 'tipo distribuição'   'parâmetro 1'   'parâmetro 2'
+1                       350000          3500
+1                       76.495        	0
+1                       210000000       0

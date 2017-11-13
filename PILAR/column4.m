@@ -48,11 +48,10 @@ PILARout.Pn(1)=Rc+Rs;
 PILARout.Mn(1)=0;
 
 % PONTO 2 - INÍCIO DA FISSURAÇÃO DO CONCRETO
-%FAB - Remoção de prealocação sem utilidade.
-%Aneg=zeros(1,PILARin.ncam);
-%Rs=zeros(1,PILARin.ncam);
+Aneg=zeros(1,PILARin.ncam);
 epsonS=zeros(1,PILARin.ncam);
 fs=zeros(1,PILARin.ncam);
+Rs=zeros(1,PILARin.ncam);
 % Cálculo da profundidade da LN - a LN encontra-se na base da seção
 % transversal de concreto, assim x=h.
 x=PILARin.h;

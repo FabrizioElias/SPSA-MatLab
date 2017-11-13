@@ -64,21 +64,17 @@ tag=1;
                     % Portanto após a primeira iteração será calculada altura útil
                     % real, essa será utilizada para uma nova iteração até que a
                     % igualdade ocorra.
-                    count=0;
-                    while d1~=d2 && count<10
+                    while d1~=d2
                         % Dimensionamento da seção à flexão
                         [Astrac, Ascomp]=beam0(momento, VIGAin, sec, bitola);
                         % Escolha do arranjo da armadura
-                        %FAB - Remoção de variável sem uso (ARRANJOcomp).
-                        [ARRANJOtrac, ~]=beam1(Astrac, Ascomp, VIGA, posbitolatrac, posbitolacomp);
+                        [ARRANJOtrac, ARRANJOcomp]=beam1(Astrac, Ascomp, VIGA, posbitolatrac, posbitolacomp);
                         % Distribuição das barras em camadas e cálculo do CG das barras de aço
                         [YcgTrac, difTrac]=beam2(ARRANJOtrac, VIGAin);
                         % Atualização da altura útil da viga                   
                         d1=VIGAin.dinf(bitola,sec);
                         d2=VIGAin.h-YcgTrac;
                         VIGAin.dinf(bitola, sec)=d2;
-                        count=count+1;
-%                         ARRANJOtrac
                     end
                     % % Verificação de a difrença entre o CG da barras e a
                     % extremidade da barra mais externa é infeior a 10% da
@@ -92,10 +88,10 @@ tag=1;
                         ARRANJOLONGinf(sec, 1)=ARRANJOtrac(1);
                         ARRANJOLONGinf(sec, 2)=ARRANJOtrac(2);
                         tag=0;
-%                         disp('      OK - Passa')
+                        %disp('      OK - Passa')
                     else
                         tag=1;
-%                         disp('      NÃO PASSA!!!')
+                        %disp('      NÃO PASSA!!!')
                     end
                  end
              end
@@ -113,16 +109,11 @@ tag=1;
              [al]=beam3(VIGAin, bitola);
              % Cálculo do comprimento de ancoragem, vante e ré da armadura
              %disp('    Cálculo dos comprimentos de ancoragem das barras positivas')
-             [lbnecVante, lbnecRe, Abarra]=beam9(VIGAin, AsCalculadoInf, ARRANJOLONGinf);%, bitola); 
+             [lbnecVante, lbnecRe, Abarra]=beam9(VIGAin, AsCalculadoInf, ARRANJOLONGinf, bitola); 
          end
      end
  end % <-- Aqui a rotina termina de "varrer" as bitolas comerciais
 
  % Cálculo do comprimento e peso final das barras positivas e de compressão - beam10.m
  %disp('    Cálculo do peso de aço referente às armaduras positvas')
- if tag==0
-     [VIGAresult, VIGAin]=beam10(VIGAin, ARRANJOLONGinf, lbnecVante, lbnecRe, al, Abarra, MCOORD, AsCalculadoInf, NUMVIGAS, VIGAresult);
- else
-     % Penalizar - Inserir um peso de armadura positiva muito alto.
-     VIGAresult.PESOpos(NUMVIGAS)=999999;
- end
+[VIGAresult, VIGAin]=beam10(VIGAin, ARRANJOLONGinf, lbnecVante, lbnecRe, al, Abarra, MCOORD, AsCalculadoInf, NUMVIGAS, VIGAresult);

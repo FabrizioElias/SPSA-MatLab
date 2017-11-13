@@ -49,22 +49,21 @@ alfav2=1-(VIGAin.fcd/1000)/250; % <-- A divisão por mil é para transformar a uni
 tauRd2I=0.27*alfav2*VIGAin.fcd; 
 
 % Verificação quanto ao esmagamento da biela de compressão
-%FAB - Adição de max() para comparar apenas o maior cortante.
-if max(tauSd)<tauRd2I
+if tauSd<tauRd2I
     % Parcela do esforço cortante absorvida pelo concreto, kN/m2
     tauc=0.6*VIGAin.fctd;
     % Parcela do esforço cortante a ser absorvida pela armadura, kN/m2
     tauwd=tauSd-tauc;
-    %tagestribo=0;
+    % Tag para entrar no loop de dimensionamento
+    tagestribo=0;
     rosw90=1.11*tauwd/VIGAin.fyd;
     for i=1:ntrechos
         if rosw90(i)<VIGAin.rosw90min
             rosw90(i)=VIGAin.rosw90min;
         end
-        % Tag para entrar no loop de dimensionamento
         tagestribo=0;
         for j=1:VIGAin.qntbitolastrans
-            if tagestribo==0
+            if tagestribo==0;
                 Asw=2*(pi*(VIGA.TABELATRANS(j)/1000)^2)/4;
                 s=Asw/(rosw90(i)*VIGAin.b);
                 if s<0.05
