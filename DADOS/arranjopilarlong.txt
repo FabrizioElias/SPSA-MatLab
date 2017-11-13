@@ -1,3 +1,0 @@
-% Arranjo de armadura do pilar:
-% Primeira linha - diâmetro das barras longitudinais
-10.0 12.5 16.0 20.0 25.0
