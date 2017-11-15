@@ -21,7 +21,7 @@ vtol = zeros(10);
 % A variável theta0 é a variável a ser otimizada. Ela será o vetor com as
 % dimensiões médias dos elementos estruturais
 theta=OTIM.X0';
-loss='fobjetivo';
+%loss='fobjetivo';
 %theta_lo=OTIM.Xmin'; %FAB - Variáveis sem utilização.
 %theta_hi=OTIM.Xmax';
 
@@ -84,7 +84,7 @@ while k<N    % Critério de parada - AJUSTAR
         secao=thetaplus;
         ELEMENTOS = assignsections(ELEMENTOS, PILAR, VIGA, secao, ESTRUTURAL); 
         % Avaliação da função com o valores de thetaplus
-        est=feval(loss,VIGA, PILAR, DADOS, PAR, ELEMENTOS, PORTICO, FLUXOCAIXA);
+        est=fobjetivo(VIGA, PILAR, DADOS, PAR, ELEMENTOS, PORTICO, FLUXOCAIXA);
         yplus=est.med;
         % YMINUS
         %disp('    Avaliação da função objetivo em thetaminus');
@@ -92,7 +92,7 @@ while k<N    % Critério de parada - AJUSTAR
         secao=thetaminus;
         ELEMENTOS = assignsections(ELEMENTOS, PILAR, VIGA, secao, ESTRUTURAL); 
         % Avaliação da função com o valores de thetaminus
-        est=feval(loss,VIGA, PILAR, DADOS, PAR, ELEMENTOS, PORTICO, FLUXOCAIXA); 
+        est=fobjetivo(VIGA, PILAR, DADOS, PAR, ELEMENTOS, PORTICO, FLUXOCAIXA); 
         yminus=est.med;
         
 
@@ -116,7 +116,7 @@ while k<N    % Critério de parada - AJUSTAR
     secao=theta;
     disp(['    secao= ',num2str(theta')])
     ELEMENTOS = assignsections(ELEMENTOS, PILAR, VIGA, secao, ESTRUTURAL);
-    est=feval(loss,VIGA, PILAR, DADOS, PAR, ELEMENTOS, PORTICO, FLUXOCAIXA);
+    est=fobjetivo(VIGA, PILAR, DADOS, PAR, ELEMENTOS, PORTICO, FLUXOCAIXA);
     
     if est.med>3*ys(k)
         disp('Função foi p casa do kct')

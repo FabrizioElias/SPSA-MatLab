@@ -69,12 +69,14 @@ ngle=max(v);
 % 2.3 - Montagem da matriz de rotação - matriz tridimensional
 ROT=zeros(6,6,PORTICO.nelem);
 for i=1:PORTICO.nelem
-    R=[cos(PORTICO.teta(i)) -sin(PORTICO.teta(i)) 0 0 0 0;
-    sin(PORTICO.teta(i)) cos(PORTICO.teta(i)) 0 0 0 0;
-    0 0 1 0 0 0;
-    0 0  0 cos(PORTICO.teta(i)) -sin(PORTICO.teta(i)) 0;
-    0 0  0 sin(PORTICO.teta(i)) cos(PORTICO.teta(i)) 0;
-    0 0 0 0 0 1];
+    COS=cos(PORTICO.teta(i));
+    SIN=sin(PORTICO.teta(i));
+    R=[COS -SIN 0 0   0    0
+       SIN COS  0 0   0    0
+       0   0    1 0   0    0
+       0   0    0 COS -SIN 0
+       0   0    0 SIN COS  0
+       0   0    0 0   0    1];
 ROT(:,:,i)=R;
 end
 
@@ -82,12 +84,19 @@ end
 % 2.4.1 - Matriz de rigidez dos elementos no referencial local
 KELEM=zeros(6,6,PORTICO.nelem);
 for i=1:PORTICO.nelem
-    kelem=[ELEMENTOS.E(i)*ELEMENTOS.A(i)/PORTICO.comp(i) 0 0 -ELEMENTOS.E(i)*ELEMENTOS.A(i)/PORTICO.comp(i) 0 0
-        0 12*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^3 6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2 0 -12*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^3 6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2
-        0 6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2 4*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i) 0 -6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2 2*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)
-        -ELEMENTOS.E(i)*ELEMENTOS.A(i)/PORTICO.comp(i) 0 0 ELEMENTOS.E(i)*ELEMENTOS.A(i)/PORTICO.comp(i) 0 0
-        0 -12*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^3 -6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2 0 12*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^3 -6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2
-        0 6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2 2*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i) 0 -6*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)^2 4*ELEMENTOS.E(i)*ELEMENTOS.I(i)/PORTICO.comp(i)];
+    EI=ELEMENTOS.E(i)*ELEMENTOS.A(i);
+    L_Quad=PORTICO.comp(i)^2;
+    L_Cubo=PORTICO.comp(i)^3;
+    EIsobreL=EI/PORTICO.comp(i);
+    %EIsobreL_Quad=EI/L_Quad;
+    Doze_EIsobreL_Cubo=12*EI/L_Cubo;
+    Seis_EIsobreL_Quad=6*EI/L_Quad;
+    kelem=[EIsobreL  0                   0                   -EIsobreL 0                   0
+           0         Doze_EIsobreL_Cubo  Seis_EIsobreL_Quad  0         -Doze_EIsobreL_Cubo Seis_EIsobreL_Quad
+           0         Seis_EIsobreL_Quad  4*EIsobreL          0         -Seis_EIsobreL_Quad 2*EIsobreL
+           -EIsobreL 0                   0                   EIsobreL  0                   0
+           0         -Doze_EIsobreL_Cubo -Seis_EIsobreL_Quad 0         Doze_EIsobreL_Cubo  -Seis_EIsobreL_Quad
+           0         Seis_EIsobreL_Quad  2*EIsobreL          0         -Seis_EIsobreL_Quad 4*EIsobreL];
     
     if DADOS.op_spring==1
         %disp(['Elemento ',num2str(i)])
@@ -108,9 +117,9 @@ end
 % 2.4.2 - Matriz de rigidez dos elementos no referencial global
 KELEMG=zeros(6,6,PORTICO.nelem);
 for i=1:PORTICO.nelem
-    D=ROT(:,:,i);
-    B=KELEM(:,:,i);
-    KELEMG(:,:,i)=D*B*D';
+    %D=ROT(:,:,i);
+    %B=KELEM(:,:,i);
+    KELEMG(:,:,i)=ROT(:,:,i)*KELEM(:,:,i)*ROT(:,:,i)';
 end
 
 % 2.5- Montagem da Matriz de rigidez da estrutura
