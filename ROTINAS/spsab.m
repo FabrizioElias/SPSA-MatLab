@@ -184,19 +184,17 @@ while k<N    % Critério de parada - AJUSTAR
             break
         end
         
-        if k>maxRuns/2
+        k=k+1;
+        %if k>maxRuns/2
             if k>maxRuns
                 disp(['    Saindo do SPSA pois k>', num2str(maxRuns),'. . .'])
                 break
             end
-            if sum(check)==0
-                disp(['    Saindo do SPSA pois k>',num2str(maxRuns/2),' e não ficou na tolerância nas últimas 10 tentativas. . .'])
-                break
-            end
-        end
-        
-        % Atualiza o valor de k
-        k=k+1;
+%             if sum(check)==0
+%                 disp(['    Saindo do SPSA pois k>',num2str(maxRuns/2),' e não ficou na tolerância nas últimas 10 tentativas. . .'])
+%                 break
+%             end
+%         end
     end
     toc    
 end

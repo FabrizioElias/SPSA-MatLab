@@ -33,35 +33,38 @@ RANDOM.normal=randn(1,DADOS.NMC);
 %substituídas por 1 e 10, pois não existe no DADOS.in os parâmetros
 %mencionados ParEstl e ParEst.
 
+%FAB - Remoção temporária da geração desses números a fim de execução mais
+%rápida.
+
 % Distribuição gama - identificador==2
 % As variáveis a e b são especificadas em ParEst1 e ParEst do cartão de
 % entrada
 %RANDOM.gamma=gamrnd(a,b,1,DADOS.NMC);
-RANDOM.gamma=gamrnd(1,10,1,DADOS.NMC);
+%RANDOM.gamma=gamrnd(1,10,1,DADOS.NMC);
 
 % Distribuição exponencial - identificador==3
 % mi - média da ditribuição exponencial - ParEst1
 % NMC - número de Monte Carlos, informa quantos valores serão gerados
 %RANDOM.exp=exprnd(mu,1,DADOS.NMC);
-RANDOM.exp=exprnd(1,1,DADOS.NMC);
+%RANDOM.exp=exprnd(1,1,DADOS.NMC);
 
 % Distribuição de Weibull - identificador==4
 % As variáveis a e b são especificadas em ParEst1 e ParEst do cartão de
 % entrada
 %RANDOM.weibull=wblrnd(a,b,1,DADOS.NMC);
-RANDOM.weibull=wblrnd(1,10,1,DADOS.NMC);
+%RANDOM.weibull=wblrnd(1,10,1,DADOS.NMC);
 
 % Distribuição de Gumbel - identificador==5
 % As variáveis mi e sigma são especificadas em ParEst1 e ParEst do cartão de
 % entrada
 %RANDOM.gumbel=evrnd(mi,sigma,1,DADOS.NMC);
-RANDOM.gumbel=evrnd(1,10,1,DADOS.NMC);
+%RANDOM.gumbel=evrnd(1,10,1,DADOS.NMC);
 
 % Distribuição lognormal - identificador==6
 % As variáveis mi e sigma são especificadas em ParEst1 e ParEst do cartão de
 % entrada
 %RANDOM.lonormal=lgnrnd(mi,sigma,1,DADOS.NMC);
-RANDOM.lonormal=lognrnd(1,2,1,DADOS.NMC);
+%RANDOM.lonormal=lognrnd(1,2,1,DADOS.NMC);
 
 
 

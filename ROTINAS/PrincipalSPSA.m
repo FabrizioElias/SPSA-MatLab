@@ -109,6 +109,7 @@ if DADOS.op_exec==2
     disp('-----------------------------------------------------------------')
     % 2.2.2 - Rotina para cálculo dos parâmetros do gain
     disp('2. Opção de utilização dos parâmetros do gain')
+    DADOS.op_gain=1; %FAB - Controle rápido de DADOS.op_gain.
     if DADOS.op_gain==1
         disp('   Obtenção automática dos parâmetros  gain sequence')
         [DADOS] = gains_model1D(OTIM,DADOS, ELEMENTOS, ESTRUTURAL, PILAR, VIGA, PAR, PORTICO, FLUXOCAIXA);
@@ -138,19 +139,19 @@ if DADOS.op_exec==2
     rodarSPSANormal=0;
     if rodarSPSANormal==0
         OTIM.custoinicial=ESTATISTICA.med;
-        stepAlphaGamma = 0.01;
-        DADOS.alphaSPSA=0.402; %valor original: 0.602
+        stepAlphaGamma = 0.001;
+        DADOS.alphaSPSA=0.001; %valor original: 0.602
         DADOS.gamma=0.001; %valor original: 0.101
         kkTotal=1;
         kk=1;
-        maxRuns_IndividualSPSA = 40;
+        maxRuns_IndividualSPSA = 90;
         startAlpha=DADOS.alphaSPSA;
-        runs=50;
+        runs=1000;
         rodadasSPSA=zeros(10,runs*runs);
         yks_rodadas = zeros(runs, maxRuns_IndividualSPSA+2);
         for kkParam=1:runs
             for kkInterno=1:runs
-                if (DADOS.alphaSPSA / DADOS.gamma >= 0.8 && DADOS.alphaSPSA / DADOS.gamma <= 1.0)
+                if (DADOS.alphaSPSA / DADOS.gamma >= 5.8 && DADOS.alphaSPSA / DADOS.gamma <= 6.1)
                     disp(['   Rodada ',num2str(kkTotal), ' de ', num2str(runs*runs)])
 
                     rng('default')
@@ -160,7 +161,7 @@ if DADOS.op_exec==2
                     rodadasSPSA(3, kk) = DADOS.gamma;
                     rodadasSPSA(4, kk) = ys(k);
                     rodadasSPSA(5:end, kk) = X(k+1, 1:end);
-                    yks_rodadas(kk, 1:k+1)=ys(1:k+1);
+                    yks_rodadas(kk, 1:k)=ys(1:k);
                     kk=kk+1;
 
                     %2.2.5 - Imprimi e sava resultados
